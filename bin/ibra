@@ -6,7 +6,7 @@
 # ==============================================================================
 set -e
 
-VERSION="3.1.7"
+VERSION="3.1.8"
 INSTALL_DIR="/root/ibra-agent-mod"
 
 print_banner() {
@@ -38,6 +38,7 @@ usage() {
   echo ""
   echo -e "\033[1;32mPerintah Manajemen Sistem:\033[0m"
   echo "  doctor              Diagnostik integritas konfigurasi, MCP server & network"
+  echo "  clean               Bersihkan cache python & berkas temporer lingkungan"
   echo "  notify <pesan>      Kirim notifikasi alert via Telegram, Discord, atau Webhook"
   echo "  update              Perbarui mod Ibra X 3.1 ke versi terbaru dari GitHub"
   echo "  mcp                 Tampilkan status server Model Context Protocol"
@@ -204,6 +205,21 @@ EOF
   esac
 }
 
+cmd_clean() {
+  print_banner
+  echo -e "\n\033[1;34m=== PEMBERSIHAN FILE SEMENTARA & CACHE ===\033[0m\n"
+  local cleaned=0
+  for p in /tmp/__pycache__* /tmp/*.tmp /tmp/antigravity; do
+    if [ -e "$p" ]; then
+      rm -rf "$p" 2>/dev/null && ((cleaned++)) || true
+    fi
+  done
+  find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+  find . -type f -name "*.pyc" -delete 2>/dev/null || true
+  echo -e "  [\033[32m✓\033[0m] Cache Python & berkas temporer berhasil dibersihkan."
+  echo ""
+}
+
 cmd_update() {
   print_banner
   echo -e "\n\033[1;34m=== MEMPERBARUI IBRA X 3.1 DARI GITHUB ===\033[0m\n"
@@ -232,9 +248,10 @@ interactive_menu() {
   echo "  [9] 📢 Kirim Notifikasi Alert (ibra notify)"
   echo "  [10] 🔄 Perbarui Mod dari GitHub"
   echo "  [11] 📈 Statistik Sistem & Mod (ibra stats)"
+  echo "  [12] 🧹 Bersihkan Cache & File Sementara (ibra clean)"
   echo "  [0] 🚪 Keluar"
   echo ""
-  read -p "Masukkan nomor pilihan [0-11]: " choice
+  read -p "Masukkan nomor pilihan [0-12]: " choice
   case "$choice" in
     1)
       read -p "Masukkan tugas untuk ibra-x: " task
@@ -259,6 +276,7 @@ interactive_menu() {
       ;;
     10) cmd_update ;;
     11) cmd_stats ;;
+    12) cmd_clean ;;
     0|"") echo "Selesai."; exit 0 ;;
     *) echo "Pilihan tidak valid."; exit 1 ;;
   esac
@@ -318,6 +336,9 @@ case "${1:-}" in
     ;;
   doctor)
     cmd_doctor
+    ;;
+  clean)
+    cmd_clean
     ;;
   update)
     cmd_update
