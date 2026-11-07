@@ -6,7 +6,7 @@
 # ==============================================================================
 set -e
 
-VERSION="3.2.1"
+VERSION="3.2.2"
 INSTALL_DIR="/root/ibra-agent-mod"
 
 print_banner() {
@@ -31,6 +31,7 @@ usage() {
   echo -e "\033[1;32mPerintah Analisis & Audit:\033[0m"
   echo "  status              Periksa metrik sistem, status Docker & koneksi router API"
   echo "  dns <host>          Resolusi DNS cepat untuk hostname/domain target"
+  echo "  hash <file>         Hitung checksum SHA-256 dan MD5 integritas berkas"
   echo "  benchmark           Uji latensi respons real-time ke router AI"
   echo "  arsitektur          Analisis struktur modul, diagram Mermaid & refactoring"
   echo "  refactor            Audit kode dan rencana refactoring Clean Code & SOLID"
@@ -113,6 +114,28 @@ try:
         print(f'  • {ip}')
 except Exception as e:
     print(f'❌ Gagal: {e}')
+" "$target"
+}
+
+cmd_hash() {
+  local target="${1:-}"
+  if [ -z "$target" ] || [ ! -f "$target" ]; then
+    echo "Masukkan berkas yang valid. Contoh: ibra hash install.sh"
+    exit 1
+  fi
+  python3 -c "
+import hashlib, sys, os
+fpath = sys.argv[1]
+sha = hashlib.sha256()
+md5 = hashlib.md5()
+with open(fpath, 'rb') as f:
+    for c in iter(lambda: f.read(65536), b''):
+        sha.update(c)
+        md5.update(c)
+print(f'🔐 Checksum Berkas: {os.path.abspath(fpath)}')
+print(f'• Ukuran  : {os.path.getsize(fpath)} bytes')
+print(f'• SHA-256 : {sha.hexdigest()}')
+print(f'• MD5     : {md5.hexdigest()}')
 " "$target"
 }
 
@@ -370,6 +393,10 @@ case "${1:-}" in
   dns)
     shift
     cmd_dns "$@"
+    ;;
+  hash)
+    shift
+    cmd_hash "$@"
     ;;
   benchmark)
     exec opencode run "/benchmark"

@@ -14,6 +14,7 @@ _ibra() {
         'init:Scaffold template proyek baru (api, worker, bot)'
         'status:Periksa metrik sistem, status Docker & router API'
         'dns:Resolusi DNS cepat untuk hostname/domain target'
+        'hash:Hitung checksum SHA-256 dan MD5 integritas berkas'
         'benchmark:Uji latensi respons real-time ke router AI'
         'arsitektur:Analisis struktur modul, diagram Mermaid & refactoring'
         'refactor:Audit kode dan rencana refactoring Clean Code & SOLID'

@@ -13,6 +13,7 @@ import subprocess
 import socket
 import urllib.request
 import time
+import hashlib
 
 TOOLS = [
     {
@@ -79,6 +80,17 @@ TOOLS = [
                 "hostname": {"type": "string", "description": "Nama domain atau host (misal: app.ibra.ai.id atau github.com)"}
             },
             "required": ["hostname"]
+        }
+    },
+    {
+        "name": "ibra_file_integrity_hasher",
+        "description": "Menghitung checksum hash (SHA-256 dan MD5) berkas lokal untuk verifikasi integritas biner/file.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "filepath": {"type": "string", "description": "Jalur lengkap atau relatif berkas yang ingin diverifikasi"}
+            },
+            "required": ["filepath"]
         }
     }
 ]
@@ -242,6 +254,33 @@ def handle_dns_lookup(hostname):
     except Exception as e:
         return f"Kesalahan DNS lookup: {str(e)}"
 
+def handle_file_integrity_hasher(filepath):
+    if not filepath:
+        return "Jalur file (filepath) tidak boleh kosong."
+    if not os.path.exists(filepath):
+        return f"File tidak ditemukan di jalur: {filepath}"
+    if not os.path.isfile(filepath):
+        return f"Jalur tersebut bukan berkas reguler: {filepath}"
+
+    try:
+        size_bytes = os.path.getsize(filepath)
+        sha256 = hashlib.sha256()
+        md5 = hashlib.md5()
+        with open(filepath, "rb") as f:
+            for chunk in iter(lambda: f.read(65536), b""):
+                sha256.update(chunk)
+                md5.update(chunk)
+
+        return (
+            f"🔐 CHECKSUM INTEGRITAS BERKAS (IBRA X 3.2):\n"
+            f"• File Target: {os.path.abspath(filepath)}\n"
+            f"• Ukuran File: {size_bytes} bytes\n"
+            f"• SHA-256   : {sha256.hexdigest()}\n"
+            f"• MD5       : {md5.hexdigest()}"
+        )
+    except Exception as e:
+        return f"Gagal menghitung hash: {str(e)}"
+
 def main():
     for line in sys.stdin:
         line = line.strip()
@@ -262,7 +301,7 @@ def main():
                 "result": {
                     "protocolVersion": "2024-11-05",
                     "capabilities": {"tools": {}},
-                    "serverInfo": {"name": "ibra-core-mcp", "version": "3.1.0"}
+                    "serverInfo": {"name": "ibra-core-mcp", "version": "3.2.2"}
                 }
             }
             sys.stdout.write(json.dumps(resp) + "\n")
@@ -309,6 +348,8 @@ def main():
                 text_output = handle_security_quick_audit()
             elif name == "ibra_dns_lookup":
                 text_output = handle_dns_lookup(args.get("hostname"))
+            elif name == "ibra_file_integrity_hasher":
+                text_output = handle_file_integrity_hasher(args.get("filepath"))
             else:
                 text_output = f"Unknown tool: {name}"
 
