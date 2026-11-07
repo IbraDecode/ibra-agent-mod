@@ -28,7 +28,15 @@ if [ -d "$SKILLS_SRC" ]; then
   echo "✓ Berhasil menginstal $count skill ke OpenCode"
 fi
 
-# 2. Daftarkan agent ibra-x jika ada opencode.json
+# 2. Salin custom commands
+COMMANDS_SRC="$SCRIPT_DIR/commands"
+if [ -d "$COMMANDS_SRC" ]; then
+  echo "→ Menginstal perintah kustom ke $OPENCODE_DIR/commands/..."
+  cp -r "$COMMANDS_SRC"/*.md "$OPENCODE_DIR/commands/"
+  echo "✓ Berhasil menginstal perintah kustom (/status, /tinjau, /perbaiki, /farm, /recon, dll.)"
+fi
+
+# 3. Daftarkan agent ibra-x jika ada opencode.json
 CONFIG="$OPENCODE_DIR/opencode.json"
 if [ -f "$CONFIG" ]; then
   python3 - "$CONFIG" <<'PY'
