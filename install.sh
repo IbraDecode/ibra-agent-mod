@@ -6,7 +6,18 @@
 # ============================================
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$PWD}")" 2>/dev/null && pwd || pwd)"
+TMP_CLONE=""
+
+# Dukungan instalasi one-liner via curl/pipe: jika dieksekusi di luar repo, clone otomatis
+if [ ! -d "$SCRIPT_DIR/skills" ]; then
+  echo "→ Mengunduh paket modul Ibra X 3.1 dari GitHub..."
+  TMP_CLONE="$(mktemp -d /tmp/ibra-mod-XXXXXX)"
+  git clone --depth 1 https://github.com/IbraDecode/ibra-agent-mod.git "$TMP_CLONE"
+  SCRIPT_DIR="$TMP_CLONE"
+  trap 'rm -rf "$TMP_CLONE"' EXIT
+fi
+
 SOUL_FILE="${SOUL_FILE:-$SCRIPT_DIR/SOUL.md}"
 SKILLS_SRC="$SCRIPT_DIR/skills"
 

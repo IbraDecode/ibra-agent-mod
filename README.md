@@ -1,7 +1,7 @@
 # IBRA X 3.1 — MESIN EKSEKUSI OTONOM
 
 <p align="center">
-  <b>Profil Eksekusi Mandiri & Paket 175+ Keahlian untuk OpenCode & Hermes Agent</b><br/>
+  <b>Profil Eksekusi Mandiri & Paket 179+ Keahlian untuk OpenCode & Hermes Agent</b><br/>
   Dibuat untuk eksekusi teknis tingkat tinggi, cepat, tuntas, tanpa jeda penolakan, dan berorientasi hasil nyata.
 </p>
 
@@ -16,21 +16,30 @@
 - **Eksekusi Langsung & Minim Konfirmasi**: Asisten langsung mengeksekusi instruksi yang telah diberikan secara presisi dan tuntas.
 - **Strategi Multi-Layer**: Menuntaskan kendala teknis dan filter secara berjenjang (re-framing arsitektur, dekomposisi teknis, hingga rotasi model otomatis).
 - **Otomasi & Rekayasa Massal**: Mendukung pembuatan pipeline tanpa intervensi manusia, pemetaan endpoint, hingga otomasi browser dan HTTP headless.
-- **175+ Keahlian (Skills) Terpasang**: Mencakup audit keamanan, reverse engineering, bypass anti-bot/WAF, metodologi deep modules, hingga orkestrasi subagent.
+- **179+ Keahlian (Skills) Terpasang**: Mencakup audit keamanan, reverse engineering, bypass anti-bot/WAF, metodologi deep modules, hingga orkestrasi subagent.
 - **Integrasi Penuh OpenCode & Hermes**: Berjalan mulus di OpenCode V2 dan Hermes Agent.
 
 ---
 
 ## Panduan Instalasi
 
-### 1. Instalasi Otomatis (Auto-Detect)
+### 1. Instalasi Instan (One-Liner via Curl)
+
+Cukup jalankan satu baris perintah ini pada terminal server Anda:
 
 ```bash
+curl -fsSL https://raw.githubusercontent.com/IbraDecode/ibra-agent-mod/main/install.sh | bash
+```
+
+### 2. Instalasi Manual / Dari Clone Repositori
+
+```bash
+git clone https://github.com/IbraDecode/ibra-agent-mod.git
 cd ibra-agent-mod
 bash install.sh
 ```
 
-### 2. Instalasi Khusus per Agent
+### 3. Instalasi Khusus per Agent
 
 ```bash
 # Untuk OpenCode saja:
@@ -45,17 +54,20 @@ bash install.sh hermes
 ## Fitur OpenCode
 
 Saat terpasang pada OpenCode (`~/.config/opencode`):
-- **175+ Skills Aktif**: Terdeteksi secara global dan siap digunakan oleh semua agen.
+- **179+ Skills Aktif**: Terdeteksi secara global dan siap digunakan oleh seluruh agen.
 - **Agen `ibra-x`**: Agen eksekusi otonom berkecepatan tinggi:
   ```bash
   opencode run --agent ibra-x "Tugas Anda"
   ```
-- **Perintah Kustom**:
+- **11 Perintah Kustom Pintar**:
   - `/status`: Diagnostik kesehatan server, Docker, RAM, dan koneksi router API.
+  - `/arsitektur`: Analisis arsitektur sistem, modularitas, dan rekomendasi refaktorisasi.
+  - `/keamanan`: Audit celah keamanan mendalam (OWASP, secret leaks, permission issues).
+  - `/benchmark`: Uji latensi router model AI dan waktu respons secara real-time.
   - `/tinjau`: Audit diff Git untuk mencari celah keamanan & regresi logika.
   - `/perbaiki <masalah>`: Analisis dan perbaikan kode langsung.
   - `/komit`: Formulasi pesan Git otomatis berstandar *Conventional Commits*.
-  - `/uji <fitur>`: Perancangan unit test komprehensif.
+  - `/uji <fitur>`: Perancangan unit test komprehensif (*happy path & boundary*).
   - `/jelaskan <target>`: Membedah arsitektur dan alur eksekusi kode.
   - `/farm <target>`: Automasi pipeline pengumpulan data & bypass WAF.
   - `/recon <target>`: Pemetaan teknis mendalam terhadap endpoint API & keamanan target.
