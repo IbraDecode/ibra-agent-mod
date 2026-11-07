@@ -1,6 +1,6 @@
 ---
 name: scrapling
-description: Use when scraping sites with stealth browsing and Cloudflare bypass (EXSALA brand).
+description: Use when scraping sites with stealth browsing and Cloudflare bypass (Ibra X brand).
 version: 1.0.0
 author: Me
 license: MIT

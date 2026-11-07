@@ -62,7 +62,7 @@ export default {
     if (request.method !== "GET" && request.method !== "HEAD") init.body = request.body;
     const resp = await fetch(new Request(upstream.toString(), init));
     const out = new Headers(resp.headers);
-    out.set("X-Exsala-Relay", "<name>");
+    out.set("X-Ibra-Relay", "<name>");
     return new Response(resp.body, { status: resp.status, headers: out });
   },
 };

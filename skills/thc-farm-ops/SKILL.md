@@ -29,7 +29,7 @@ cd ~/app/cache/scratch/thc && TH_N=20 node thc_farm.mjs
 ```
 Re-run per-akun (satu CLI call):
 ```bash
-node src/index.mjs -n 1 --retries 4 -o output/x.json --inbox-provider exsala --mail-api-key gionova14 --proxy "http://<proxy>"
+node src/index.mjs -n 1 --retries 4 -o output/x.json --inbox-provider ibra-mail --mail-api-key gionova14 --proxy "http://<proxy>"
 ```
 
 ### Batch runner tanpa pump — `run5.mjs`

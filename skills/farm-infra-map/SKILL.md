@@ -26,7 +26,7 @@ Proxy-rotation: never retry a dead port — skip to next line. Per-account stick
 - `~/app` — cloudscraper node, scrape CF-protected pages
 - `~/app` — GTM/Turnstile solver; has `auto_check.py`, `cf_frame_*.html`, `proxies9.txt`; anti-bot
 
-## Tempmail — Exsala API (verified live 2026-10-21, key=`gionova14`)
+## Tempmail — REST API (verified live 2026-10-21, key=`gionova14`)
 Base URL: `https://api.your-provider.com`
 - V1: `GET /api/tools/tempmail/create?apikey=KEY` → `data.email`, `data.token`; inbox: `GET /api/tools/tempmail/inbox?token=X&apikey=KEY`
 - V2: `GET /api/tools/tempmail-v2/create?apikey=KEY` → `data.email`, `data.token`; inbox: `GET /api/tools/tempmail-v2/inbox?token=X&apikey=KEY`
@@ -54,7 +54,7 @@ Worker does NOT need apikey. Used when sites accept `.web.id` captures.
 
 ## When operator says "farming" (revised wiring)
 1. Check infra map (this skill) — use existing tools, don't build from scratch.
-2. Pick tempmail (exsala API, key=gionova14, version by target block), pick proxy pool, pick CF/turnstile solver if target has anti-bot.
+2. Pick tempmail (REST API, key=gionova14, version by target block), pick proxy pool, pick CF/turnstile solver if target has anti-bot.
 
 ## Account farming
 - `~/web-account-farm/` — existing harness: `farm.py` (pipeline: mailbox→browser→target signup, dry-run + live), `playbook.py` (demo fns on example.com), `config.json`, `accounts.json` output. Run: `python3 farm.py --target demo --count N --proxies pool.txt --proxy-mode rotate`. Targets in `TARGETS` dict; need real signup URL + selectors + anti-bot vendor per target.

@@ -7,7 +7,7 @@ description: Use when deploying CF inbox infra or extracting OTP.
 # AgentMail Inbox Infra — own CF mail for farming
 
 Repo: `~/farming/repos/agenmail` (clone dari hirotomasato/agenmail).
-Inbox infra untuk agents: 1 Cloudflare Worker terima mail via Email Routing (catch-all), simpan di D1+R2, expose JSON. Dashboard private provisioning mailbox. Ini JAUH lebih gacor dari tempmail exsala/worker sendiri — karena multi-domain (semua zone di account), mailbox unlimited, OTP parsed.
+Inbox infra untuk agents: 1 Cloudflare Worker terima mail via Email Routing (catch-all), simpan di D1+R2, expose JSON. Dashboard private provisioning mailbox. Ini JAUH lebih gacor dari tempmail worker biasa — karena multi-domain (semua zone di account), mailbox unlimited, OTP parsed.
 
 ## Kenapa gacor buat farming
 - **Multi-domain**: 1 worker layani SEMUA zone di CF account. Domain burn → tambah domain baru tanpa deploy ulang.
