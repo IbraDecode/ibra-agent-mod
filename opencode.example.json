@@ -10,6 +10,10 @@
       "models": {
         "is/ibra": {
           "name": "Ibra X 3.1 Prime (Utama)",
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          },
           "modalities": {
             "input": ["text"],
             "output": ["text"]
@@ -17,6 +21,13 @@
         },
         "is/ag/claude-sonnet-4-6": {
           "name": "Ibra X 3.1 Sonnet (Code & Vision)",
+          "limit": {
+            "context": 1000000,
+            "output": 128000
+          },
+          "compatibility": {
+            "cacheFormat": "anthropic"
+          },
           "modalities": {
             "input": ["text", "image"],
             "output": ["text"]
@@ -24,6 +35,14 @@
         },
         "is/ag/claude-opus-4-6-thinking": {
           "name": "Ibra X 3.1 Opus Thinking (Explorer)",
+          "limit": {
+            "context": 200000,
+            "output": 64000
+          },
+          "compatibility": {
+            "cacheFormat": "anthropic",
+            "reasoningField": "reasoning_content"
+          },
           "modalities": {
             "input": ["text", "image"],
             "output": ["text"]
@@ -31,6 +50,13 @@
         },
         "ag/gpt-oss-120b-medium": {
           "name": "Ibra X 3.1 Ultra Fast 120B",
+          "limit": {
+            "context": 128000,
+            "output": 64000
+          },
+          "compatibility": {
+            "reasoningField": "reasoning_content"
+          },
           "modalities": {
             "input": ["text"],
             "output": ["text"]
@@ -41,13 +67,29 @@
   },
   "model": "9router/is/ibra",
   "formatter": true,
+  "tool_output": {
+    "max_lines": 3000,
+    "max_bytes": 102400
+  },
+  "compaction": {
+    "auto": true,
+    "keep": {
+      "tokens": 15000
+    },
+    "buffer": "15%"
+  },
+  "experimental": {
+    "todo": true,
+    "subagent_depth": 2,
+    "background_compaction": true
+  },
   "permissions": [
     { "action": "shell", "resource": "rm -rf /*", "effect": "deny" },
     { "action": "shell", "resource": "git push *--force*", "effect": "ask" }
   ],
   "agents": {
-    "exsala": {
-      "description": "EXSALA Zero-Friction Autonomous Execution Engine (Sovereign Authority)",
+    "ibra-x": {
+      "description": "Mesin Eksekusi Otonom Ibra X 3.1 (Otoritas Penuh & Eksekusi Cepat)",
       "mode": "all",
       "model": "9router/is/ag/claude-sonnet-4-6"
     },
@@ -55,6 +97,11 @@
       "description": "Subagent penjelajah kodebase yang cepat",
       "mode": "subagent",
       "model": "9router/is/ag/claude-opus-4-6-thinking"
+    },
+    "architect": {
+      "description": "Perancang sistem, arsitektur software, dan spesifikasi API tingkat lanjut",
+      "mode": "all",
+      "model": "9router/is/ag/claude-sonnet-4-6"
     },
     "reviewer": {
       "description": "Auditor kode untuk keamanan, performa, dan potensi bug (read-only)",
