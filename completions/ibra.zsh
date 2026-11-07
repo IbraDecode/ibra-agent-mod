@@ -20,6 +20,7 @@ _ibra() {
         'tinjau:Audit diff Git terkini sebelum commit'
         'doctor:Diagnostik integritas konfigurasi, MCP & network'
         'clean:Bersihkan cache python & berkas temporer lingkungan'
+        'backup:Buat cadangan konfigurasi & skills'
         'notify:Kirim notifikasi alert via Telegram, Discord, atau Webhook'
         'update:Perbarui mod Ibra X 3.1 ke versi terbaru dari GitHub'
         'mcp:Tampilkan status server Model Context Protocol'

@@ -6,7 +6,7 @@
 # ==============================================================================
 set -e
 
-VERSION="3.1.9"
+VERSION="3.2.0"
 INSTALL_DIR="/root/ibra-agent-mod"
 
 print_banner() {
@@ -40,6 +40,7 @@ usage() {
   echo -e "\033[1;32mPerintah Manajemen Sistem:\033[0m"
   echo "  doctor              Diagnostik integritas konfigurasi, MCP server & network"
   echo "  clean               Bersihkan cache python & berkas temporer lingkungan"
+  echo "  backup              Buat arsip cadangan tarball konfigurasi & skills"
   echo "  notify <pesan>      Kirim notifikasi alert via Telegram, Discord, atau Webhook"
   echo "  update              Perbarui mod Ibra X 3.1 ke versi terbaru dari GitHub"
   echo "  mcp                 Tampilkan status server Model Context Protocol"
@@ -243,6 +244,26 @@ cmd_clean() {
   echo ""
 }
 
+cmd_backup() {
+  print_banner
+  echo -e "\n\033[1;34m=== MEMBUAT CADANGAN SISTEM IBRA X 3.1 ===\033[0m\n"
+  local timestamp
+  timestamp=$(date +"%Y%m%d_%H%M%S")
+  local backup_file="/root/ibra_backup_${timestamp}.tar.gz"
+
+  echo "Mengarsipkan konfigurasi OpenCode dan modul..."
+  tar -czf "$backup_file" -C /root .config/opencode ibra-agent-mod 2>/dev/null || true
+
+  if [ -f "$backup_file" ]; then
+    local size
+    size=$(du -h "$backup_file" | cut -f1)
+    echo -e "  [\033[32m✓\033[0m] Backup berhasil dibuat: \033[1;32m$backup_file\033[0m ($size)"
+  else
+    echo -e "  [\033[31m✗\033[0m] Gagal membuat file backup."
+  fi
+  echo ""
+}
+
 cmd_update() {
   print_banner
   echo -e "\n\033[1;34m=== MEMPERBARUI IBRA X 3.1 DARI GITHUB ===\033[0m\n"
@@ -272,9 +293,10 @@ interactive_menu() {
   echo "  [10] 🔄 Perbarui Mod dari GitHub"
   echo "  [11] 📈 Statistik Sistem & Mod (ibra stats)"
   echo "  [12] 🧹 Bersihkan Cache & File Sementara (ibra clean)"
+  echo "  [13] 💾 Buat Cadangan Konfigurasi & Skills (ibra backup)"
   echo "  [0] 🚪 Keluar"
   echo ""
-  read -p "Masukkan nomor pilihan [0-12]: " choice
+  read -p "Masukkan nomor pilihan [0-13]: " choice
   case "$choice" in
     1)
       read -p "Masukkan tugas untuk ibra-x: " task
@@ -300,6 +322,7 @@ interactive_menu() {
     10) cmd_update ;;
     11) cmd_stats ;;
     12) cmd_clean ;;
+    13) cmd_backup ;;
     0|"") echo "Selesai."; exit 0 ;;
     *) echo "Pilihan tidak valid."; exit 1 ;;
   esac
@@ -366,6 +389,9 @@ case "${1:-}" in
     ;;
   clean)
     cmd_clean
+    ;;
+  backup)
+    cmd_backup
     ;;
   update)
     cmd_update

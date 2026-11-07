@@ -7,83 +7,45 @@ license: MIT
 platforms: [linux]
 metadata:
   hermes:
-    tags: [Security, VPS, Linux, Sysadmin, Hardening, Firewall, SSH]
+    tags: [Linux, VPS, Hardening, Security, Sysctl, UFW, SSH]
 ---
 
-# VPS Hardening & Security Protocol (Ibra X 3.1)
+# VPS Linux Production Hardening Protocol (Ibra X 3.1)
 
-Protokol pengamanan komprehensif untuk VPS Linux Ubuntu/Debian/RHEL/CentOS guna mencegah serangan brute-force, eksploitasi port terbuka, dan serangan DoS tingkat jaringan.
+Langkah pengamanan fundamental pada server Linux VPS sebelum dialokasikan untuk beban kerja produksi.
 
-## 1. SSH Hardening (`/etc/ssh/sshd_config`)
+## 1. Pengamanan Layanan SSH (`/etc/ssh/sshd_config.d/99-hardened.conf`)
 
-Terapkan aturan ketat untuk menolak login kata sandi dan brute force:
+- Nonaktifkan login berbasis kata sandi (wajib SSH Public Key):
+  ```ini
+  PasswordAuthentication no
+  PermitRootLogin prohibit-password
+  PubkeyAuthentication yes
+  KbdInteractiveAuthentication no
+  X11Forwarding no
+  MaxAuthTries 3
+  ```
+- Restart daemon SSH dengan aman:
+  ```bash
+  sshd -t && systemctl reload ssh
+  ```
 
-```bash
-# Nonaktifkan login kata sandi & batasi otentikasi hanya via SSH Key
-sudo sed -i 's/^#\?PasswordAuthentication .*/PasswordAuthentication no/' /etc/ssh/sshd_config
-sudo sed -i 's/^#\?PermitRootLogin .*/PermitRootLogin prohibit-password/' /etc/ssh/sshd_config
-sudo sed -i 's/^#\?MaxAuthTries .*/MaxAuthTries 3/' /etc/ssh/sshd_config
-sudo sed -i 's/^#\?X11Forwarding .*/X11Forwarding no/' /etc/ssh/sshd_config
+## 2. Tuning Kernel Parameter (`/etc/sysctl.d/99-security.conf`)
 
-# Reload ssh service dengan aman (tanpa memutus koneksi aktif)
-sudo systemctl reload sshd || sudo systemctl reload ssh
-```
-
-## 2. Firewall Strict Configuration (UFW / iptables)
-
-```bash
-# Set default policy: tolak semua inbound, izinkan outbound
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-
-# Izinkan port esensial
-sudo ufw allow 22/tcp comment 'SSH Port'
-sudo ufw allow 80/tcp comment 'HTTP Web'
-sudo ufw allow 443/tcp comment 'HTTPS Web'
-
-# Aktifkan firewall
-sudo ufw --force enable
-sudo ufw status verbose
-```
-
-## 3. Kernel Network Hardening (`/etc/sysctl.d/99-security.conf`)
-
-Terapkan proteksi kernel terhadap SYN Flood, IP Spoofing, dan ICMP Redirects:
-
+Mitigasi serangan spoofing IP dan ICMP redirects:
 ```ini
-# /etc/sysctl.d/99-security.conf
-net.ipv4.tcp_syncookies = 1
+# Abaikan ICMP broadcast requests
+net.ipv4.icmp_echo_ignore_broadcasts = 1
+
+# Cegah IP Spoofing
 net.ipv4.conf.all.rp_filter = 1
 net.ipv4.conf.default.rp_filter = 1
+
+# Tolak ICMP Redirects
 net.ipv4.conf.all.accept_redirects = 0
-net.ipv4.conf.default.accept_redirects = 0
-net.ipv4.conf.all.send_redirects = 0
-net.ipv4.conf.default.send_redirects = 0
-net.ipv4.conf.all.accept_source_route = 0
-net.ipv4.conf.default.accept_source_route = 0
-net.ipv4.icmp_echo_ignore_broadcasts = 1
-net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.all.accept_redirects = 0
+
+# Lindungi terhadap TCP SYN Flood
+net.ipv4.tcp_syncookies = 1
 ```
-
-Aktifkan konfigurasi seketika:
-```bash
-sudo sysctl --system
-```
-
-## 4. Fail2ban Protection (Anti-Brute Force)
-
-```bash
-sudo apt update && sudo apt install -y fail2ban
-sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
-sudo systemctl enable fail2ban
-sudo systemctl restart fail2ban
-sudo fail2ban-client status sshd
-```
-
-## 5. Audit Port & Layanan Terbuka
-
-Periksa apakah ada proses berbahaya yang mendengarkan interface publik:
-```bash
-ss -tulpn
-```
-Pastikan database lokal (seperti Redis `6379`, MySQL `3306`, Postgres `5432`) hanya terikat pada `127.0.0.1` (*localhost*), bukan `0.0.0.0`.
+Aktifkan konfigurasi via `sysctl --system`.

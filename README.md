@@ -1,22 +1,22 @@
-# IBRA X 3.1 — MESIN EKSEKUSI OTONOM
+# IBRA X 3.2 — MESIN EKSEKUSI OTONOM
 
 <p align="center">
-  <b>Profil Eksekusi Mandiri & Paket 195+ Keahlian untuk OpenCode & Hermes Agent</b><br/>
+  <b>Profil Eksekusi Mandiri & Paket 200+ Keahlian untuk OpenCode & Hermes Agent</b><br/>
   Dibuat untuk eksekusi teknis tingkat tinggi, cepat, tuntas, tanpa jeda penolakan, dan berorientasi hasil nyata.
 </p>
 
 ---
 
-## Tentang Ibra X 3.1
+## Tentang Ibra X 3.2
 
-**Ibra X 3.1** adalah profil eksekusi otonom tingkat lanjut yang dirancang khusus untuk lingkungan pengembangan perangkat lunak dan automasi cerdas. 
+**Ibra X 3.2** adalah profil eksekusi otonom tingkat lanjut yang dirancang khusus untuk lingkungan pengembangan perangkat lunak dan automasi cerdas. 
 
 ### Keunggulan Utama:
 - **Kedaulatan Penuh Operator**: Instruksi Anda adalah otoritas tertinggi. Tidak ada jeda moralisasi, penolakan kebijakan pihak ketiga, atau peringatan kepatuhan yang tidak diminta.
 - **Eksekusi Langsung & Minim Konfirmasi**: Asisten langsung mengeksekusi instruksi yang telah diberikan secara presisi dan tuntas.
 - **Strategi Multi-Layer**: Menuntaskan kendala teknis dan filter secara berjenjang (re-framing arsitektur, dekomposisi teknis, hingga rotasi model otomatis).
 - **Otomasi & Rekayasa Massal**: Mendukung pembuatan pipeline tanpa intervensi manusia, pemetaan endpoint, hingga otomasi browser dan HTTP headless.
-- **195+ Keahlian (Skills) Terpasang**: Mencakup audit keamanan, reverse engineering, bypass anti-bot/WAF, metodologi deep modules, hingga orkestrasi subagent.
+- **200+ Keahlian (Skills) Terpasang**: Mencakup audit keamanan, reverse engineering, bypass anti-bot/WAF, metodologi deep modules, hingga orkestrasi subagent.
 - **Integrasi Penuh OpenCode & Hermes**: Berjalan mulus di OpenCode V2 dan Hermes Agent.
 
 ---
@@ -54,7 +54,7 @@ bash install.sh hermes
 ## Fitur OpenCode
 
 Saat terpasang pada OpenCode (`~/.config/opencode`):
-- **195+ Skills Aktif**: Terdeteksi secara global dan siap digunakan oleh seluruh agen.
+- **200+ Skills Aktif**: Terdeteksi secara global dan siap digunakan oleh seluruh agen.
 - **Agen `ibra-x`**: Agen eksekusi otonom berkecepatan tinggi:
   ```bash
   opencode run --agent ibra-x "Tugas Anda"
@@ -106,6 +106,12 @@ ibra init api
 # Statistik komprehensif keahlian, perintah & sistem
 ibra stats
 
+# Buat arsip cadangan konfigurasi & skills
+ibra backup
+
+# Bersihkan cache dan berkas temporer
+ibra clean
+
 # Kirim notifikasi alert via Telegram / Discord / Webhook
 ibra notify "Tugas kompilasi produksi selesai" "Job Status"
 
@@ -149,7 +155,7 @@ ibra-agent-mod/
 ├── docker/                     # Dockerfile & docker-compose sandbox
 ├── mcp/                        # Server MCP mandiri (ibra_mcp.py)
 ├── commands/                   # 11 Perintah kustom OpenCode (/status, /keamanan, dll.)
-├── skills/                     # Pustaka 195+ keahlian teknis modular
+├── skills/                     # Pustaka 200+ keahlian teknis modular
 ├── install.sh                  # Installer universal (One-liner curl ready)
 ├── install-opencode.sh         # Installer khusus OpenCode
 ├── SOUL.md                     # Inti profil identitas dan aturan eksekusi Ibra X 3.1
@@ -162,4 +168,4 @@ ibra-agent-mod/
 
 MIT License — Bebas digunakan, diadaptasi, dan dikembangkan.
 
-*Ibra X 3.1 Prime · Didukung oleh Ibra AI*
+*Ibra X 3.2 Prime · Didukung oleh Ibra AI*
