@@ -51,10 +51,14 @@ Saat terpasang pada OpenCode (`~/.config/opencode`):
   opencode run --agent ibra-x "Tugas Anda"
   ```
 - **Perintah Kustom**:
-  - `/farm <target>`: Automasi pipeline pengumpulan data & bypass WAF.
-  - `/recon <target>`: Rekonsiliasi mendalam endpoint dan arsitektur aplikasi.
+  - `/status`: Diagnostik kesehatan server, Docker, RAM, dan koneksi router API.
   - `/tinjau`: Audit diff Git untuk mencari celah keamanan & regresi logika.
   - `/perbaiki <masalah>`: Analisis dan perbaikan kode langsung.
+  - `/komit`: Formulasi pesan Git otomatis berstandar *Conventional Commits*.
+  - `/uji <fitur>`: Perancangan unit test komprehensif.
+  - `/jelaskan <target>`: Membedah arsitektur dan alur eksekusi kode.
+  - `/farm <target>`: Automasi pipeline pengumpulan data & bypass WAF.
+  - `/recon <target>`: Pemetaan teknis mendalam terhadap endpoint API & keamanan target.
 
 ---
 
@@ -67,6 +71,7 @@ ibra-agent-mod/
 ├── SOUL.md                     # Inti profil identitas dan aturan eksekusi Ibra X 3.1
 ├── opencode.example.json       # Template konfigurasi OpenCode
 ├── config.example.yaml         # Template konfigurasi Hermes Agent
+├── commands/                   # 8 Perintah kustom OpenCode (/status, /tinjau, dll.)
 ├── skills/                     # Pustaka 175+ keahlian teknis modular
 └── README.md                   # Dokumentasi resmi Ibra X 3.1
 ```
