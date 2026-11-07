@@ -16,6 +16,8 @@ _ibra() {
         'dns:Resolusi DNS cepat untuk hostname/domain target'
         'benchmark:Uji latensi respons real-time ke router AI'
         'arsitektur:Analisis struktur modul, diagram Mermaid & refactoring'
+        'refactor:Audit kode dan rencana refactoring Clean Code & SOLID'
+        'dockerize:Generate Dockerfile multi-stage & compose produksi'
         'keamanan:Audit celah keamanan OWASP, kebocoran secret & permissions'
         'tinjau:Audit diff Git terkini sebelum commit'
         'doctor:Diagnostik integritas konfigurasi, MCP & network'

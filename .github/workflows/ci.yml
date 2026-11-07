@@ -40,13 +40,13 @@ jobs:
 
           skill_files = glob.glob("skills/*/SKILL.md")
           print(f"Total skills terdeteksi: {len(skill_files)}")
-          if len(skill_files) < 199:
-              print(f"ERROR: Jumlah skill ({len(skill_files)}) di bawah ambang batas minimum (199)")
+          if len(skill_files) < 201:
+              print(f"ERROR: Jumlah skill ({len(skill_files)}) di bawah ambang batas minimum (201)")
               sys.exit(1)
 
           commands = glob.glob("commands/*.md")
           print(f"Total commands terdeteksi: {len(commands)}")
-          if len(commands) < 10:
+          if len(commands) < 12:
               print(f"ERROR: Jumlah perintah kustom ({len(commands)}) kurang dari 10")
               sys.exit(1)
 

@@ -102,5 +102,5 @@ echo "┌───────────────────────�
 echo "│  ✅ IBRA X 3.1 MOD BERHASIL TERPASANG        │"
 echo "│  powered by Ibra AI                          │"
 echo "└──────────────────────────────────────────────┘"
-echo " • 200+ Skill Pack aktif di OpenCode"
+echo " • 202+ Skill Pack aktif di OpenCode"
 echo " • Agen 'ibra-x' siap digunakan: opencode run --agent ibra-x"

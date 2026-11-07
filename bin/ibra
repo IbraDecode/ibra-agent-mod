@@ -6,7 +6,7 @@
 # ==============================================================================
 set -e
 
-VERSION="3.2.0"
+VERSION="3.2.1"
 INSTALL_DIR="/root/ibra-agent-mod"
 
 print_banner() {
@@ -33,6 +33,8 @@ usage() {
   echo "  dns <host>          Resolusi DNS cepat untuk hostname/domain target"
   echo "  benchmark           Uji latensi respons real-time ke router AI"
   echo "  arsitektur          Analisis struktur modul, diagram Mermaid & refactoring"
+  echo "  refactor            Audit kode dan rencana refactoring Clean Code & SOLID"
+  echo "  dockerize           Generate Dockerfile multi-stage & compose produksi"
   echo "  keamanan            Audit celah keamanan OWASP, kebocoran secret & permissions"
   echo "  tinjau              Audit diff Git terkini sebelum commit"
   echo "  stats               Statistik total skills, commands, MCP, dan riwayat commit"
@@ -287,16 +289,18 @@ interactive_menu() {
   echo "  [4] 📊 Status Kesehatan Sistem & Router API"
   echo "  [5] ⏱️  Uji Benchmark Latensi AI Real-Time"
   echo "  [6] 🏗️  Analisis Arsitektur Codebase"
-  echo "  [7] 🔒 Audit Keamanan OWASP & Secret Leaks"
-  echo "  [8] 🩺 Diagnostik Lengkap (Doctor)"
-  echo "  [9] 📢 Kirim Notifikasi Alert (ibra notify)"
-  echo "  [10] 🔄 Perbarui Mod dari GitHub"
-  echo "  [11] 📈 Statistik Sistem & Mod (ibra stats)"
-  echo "  [12] 🧹 Bersihkan Cache & File Sementara (ibra clean)"
-  echo "  [13] 💾 Buat Cadangan Konfigurasi & Skills (ibra backup)"
+  echo "  [7] ♻️  Audit & Rekomendasi Refactoring (Clean Code)"
+  echo "  [8] 🐳 Buat Konfigurasi Dockerfile Produksi (Dockerize)"
+  echo "  [9] 🔒 Audit Keamanan OWASP & Secret Leaks"
+  echo "  [10] 🩺 Diagnostik Lengkap (Doctor)"
+  echo "  [11] 📢 Kirim Notifikasi Alert (ibra notify)"
+  echo "  [12] 🔄 Perbarui Mod dari GitHub"
+  echo "  [13] 📈 Statistik Sistem & Mod (ibra stats)"
+  echo "  [14] 🧹 Bersihkan Cache & File Sementara (ibra clean)"
+  echo "  [15] 💾 Buat Cadangan Konfigurasi & Skills (ibra backup)"
   echo "  [0] 🚪 Keluar"
   echo ""
-  read -p "Masukkan nomor pilihan [0-13]: " choice
+  read -p "Masukkan nomor pilihan [0-15]: " choice
   case "$choice" in
     1)
       read -p "Masukkan tugas untuk ibra-x: " task
@@ -313,16 +317,18 @@ interactive_menu() {
     4) exec opencode run "/status" ;;
     5) exec opencode run "/benchmark" ;;
     6) exec opencode run "/arsitektur" ;;
-    7) exec opencode run "/keamanan" ;;
-    8) cmd_doctor ;;
-    9)
+    7) exec opencode run "/refactor" ;;
+    8) exec opencode run "/dockerize" ;;
+    9) exec opencode run "/keamanan" ;;
+    10) cmd_doctor ;;
+    11)
       read -p "Pesan notifikasi: " msg
       [ -n "$msg" ] && exec /root/ibra-agent-mod/bin/ibra-notify "$msg"
       ;;
-    10) cmd_update ;;
-    11) cmd_stats ;;
-    12) cmd_clean ;;
-    13) cmd_backup ;;
+    12) cmd_update ;;
+    13) cmd_stats ;;
+    14) cmd_clean ;;
+    15) cmd_backup ;;
     0|"") echo "Selesai."; exit 0 ;;
     *) echo "Pilihan tidak valid."; exit 1 ;;
   esac
@@ -370,6 +376,12 @@ case "${1:-}" in
     ;;
   arsitektur)
     exec opencode run "/arsitektur"
+    ;;
+  refactor)
+    exec opencode run "/refactor"
+    ;;
+  dockerize)
+    exec opencode run "/dockerize"
     ;;
   keamanan)
     exec opencode run "/keamanan"

@@ -1,7 +1,7 @@
 # IBRA X 3.2 — MESIN EKSEKUSI OTONOM
 
 <p align="center">
-  <b>Profil Eksekusi Mandiri & Paket 200+ Keahlian untuk OpenCode & Hermes Agent</b><br/>
+  <b>Profil Eksekusi Mandiri & Paket 202+ Keahlian untuk OpenCode & Hermes Agent</b><br/>
   Dibuat untuk eksekusi teknis tingkat tinggi, cepat, tuntas, tanpa jeda penolakan, dan berorientasi hasil nyata.
 </p>
 
@@ -16,7 +16,7 @@
 - **Eksekusi Langsung & Minim Konfirmasi**: Asisten langsung mengeksekusi instruksi yang telah diberikan secara presisi dan tuntas.
 - **Strategi Multi-Layer**: Menuntaskan kendala teknis dan filter secara berjenjang (re-framing arsitektur, dekomposisi teknis, hingga rotasi model otomatis).
 - **Otomasi & Rekayasa Massal**: Mendukung pembuatan pipeline tanpa intervensi manusia, pemetaan endpoint, hingga otomasi browser dan HTTP headless.
-- **200+ Keahlian (Skills) Terpasang**: Mencakup audit keamanan, reverse engineering, bypass anti-bot/WAF, metodologi deep modules, hingga orkestrasi subagent.
+- **202+ Keahlian (Skills) Terpasang**: Mencakup audit keamanan, reverse engineering, bypass anti-bot/WAF, metodologi deep modules, hingga orkestrasi subagent.
 - **Integrasi Penuh OpenCode & Hermes**: Berjalan mulus di OpenCode V2 dan Hermes Agent.
 
 ---
@@ -54,14 +54,16 @@ bash install.sh hermes
 ## Fitur OpenCode
 
 Saat terpasang pada OpenCode (`~/.config/opencode`):
-- **200+ Skills Aktif**: Terdeteksi secara global dan siap digunakan oleh seluruh agen.
+- **202+ Skills Aktif**: Terdeteksi secara global dan siap digunakan oleh seluruh agen.
 - **Agen `ibra-x`**: Agen eksekusi otonom berkecepatan tinggi:
   ```bash
   opencode run --agent ibra-x "Tugas Anda"
   ```
-- **11 Perintah Kustom Pintar**:
+- **13 Perintah Kustom Pintar**:
   - `/status`: Diagnostik kesehatan server, Docker, RAM, dan koneksi router API.
   - `/arsitektur`: Analisis arsitektur sistem, modularitas, dan rekomendasi refaktorisasi.
+  - `/refactor`: Audit kode mendalam dan formulasi refactoring Clean Code & SOLID.
+  - `/dockerize`: Generate otomatis Dockerfile multi-stage produksi dan docker-compose.yml aman.
   - `/keamanan`: Audit celah keamanan mendalam (OWASP, secret leaks, permission issues).
   - `/benchmark`: Uji latensi router model AI dan waktu respons secara real-time.
   - `/tinjau`: Audit diff Git untuk mencari celah keamanan & regresi logika.
@@ -98,6 +100,8 @@ ibra benchmark
 
 # Audit arsitektur & keamanan direktori kerja saat ini
 ibra arsitektur
+ibra refactor
+ibra dockerize
 ibra keamanan
 
 # Scaffold template proyek baru (REST API, Cloudflare Worker, Bot)
@@ -154,8 +158,8 @@ ibra-agent-mod/
 ├── completions/                # Shell completions (bash & zsh)
 ├── docker/                     # Dockerfile & docker-compose sandbox
 ├── mcp/                        # Server MCP mandiri (ibra_mcp.py)
-├── commands/                   # 11 Perintah kustom OpenCode (/status, /keamanan, dll.)
-├── skills/                     # Pustaka 200+ keahlian teknis modular
+├── commands/                   # 13 Perintah kustom OpenCode (/status, /refactor, dll.)
+├── skills/                     # Pustaka 202+ keahlian teknis modular
 ├── install.sh                  # Installer universal (One-liner curl ready)
 ├── install-opencode.sh         # Installer khusus OpenCode
 ├── SOUL.md                     # Inti profil identitas dan aturan eksekusi Ibra X 3.1
