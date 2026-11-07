@@ -6,7 +6,7 @@
 # ==============================================================================
 set -e
 
-VERSION="3.1.4"
+VERSION="3.1.5"
 INSTALL_DIR="/root/ibra-agent-mod"
 
 print_banner() {
@@ -26,6 +26,7 @@ usage() {
   echo "  fast <tugas>        Eksekusi tugas kilat dengan model Ultra Fast 120B"
   echo "  explore <tugas>     Eksplorasi kode & audit logika mendalam (Opus Thinking)"
   echo "  sonnet <tugas>      Coding dan rekayasa arsitektur dengan Claude Sonnet 4.6"
+  echo "  init <template>     Scaffold template proyek baru (api / worker / bot)"
   echo ""
   echo -e "\033[1;32mPerintah Analisis & Audit:\033[0m"
   echo "  status              Periksa metrik sistem, status Docker & koneksi router API"
@@ -33,6 +34,7 @@ usage() {
   echo "  arsitektur          Analisis struktur modul, diagram Mermaid & refactoring"
   echo "  keamanan            Audit celah keamanan OWASP, kebocoran secret & permissions"
   echo "  tinjau              Audit diff Git terkini sebelum commit"
+  echo "  stats               Statistik total skills, commands, MCP, dan riwayat commit"
   echo ""
   echo -e "\033[1;32mPerintah Manajemen Sistem:\033[0m"
   echo "  doctor              Diagnostik integritas konfigurasi, MCP server & network"
@@ -87,6 +89,121 @@ cmd_doctor() {
   echo ""
 }
 
+cmd_stats() {
+  print_banner
+  echo -e "\n\033[1;34m=== STATISTIK EKOSISTEM IBRA X 3.1 ===\033[0m\n"
+  local skills_count
+  skills_count=$(ls -d "$INSTALL_DIR/skills"/*/ 2>/dev/null | wc -l || echo "0")
+  local commands_count
+  commands_count=$(ls -1 "$INSTALL_DIR/commands"/*.md 2>/dev/null | wc -l || echo "0")
+  local git_commits
+  git_commits=$(cd "$INSTALL_DIR" && git rev-list --count HEAD 2>/dev/null || echo "N/A")
+  local latest_commit
+  latest_commit=$(cd "$INSTALL_DIR" && git log -1 --format="%h (%cr) - %s" 2>/dev/null || echo "N/A")
+
+  echo -e "  • \033[1;32mTotal Keahlian (Skills)\033[0m   : ${skills_count} skills terpasang"
+  echo -e "  • \033[1;32mPerintah Pintar (Commands)\033[0m: ${commands_count} commands aktif"
+  echo -e "  • \033[1;32mVersi Command Center\033[0m      : v${VERSION}"
+  echo -e "  • \033[1;32mTotal Git Commits\033[0m         : ${git_commits} commits"
+  echo -e "  • \033[1;32mCommit Terakhir\033[0m           : ${latest_commit}"
+  echo -e "  • \033[1;32mServer MCP Terhubung\033[0m      : $(opencode mcp list 2>&1 | tr '\n' ' ')"
+  echo ""
+}
+
+cmd_init() {
+  local template="${1:-}"
+  if [ -z "$template" ]; then
+    echo -e "\033[1;33mPilih template proyek yang ingin dibuat:\033[0m"
+    echo "  1) api     — REST API Server (Python FastAPI + Dockerfile)"
+    echo "  2) worker  — Cloudflare Worker (TypeScript + wrangler.toml)"
+    echo "  3) bot     — Webhook Automation Bot"
+    read -p "Masukkan pilihan [api/worker/bot]: " template
+  fi
+
+  case "$template" in
+    1|api)
+      echo "→ Membuat scaffolding REST API Service..."
+      cat <<'EOF' > main.py
+from fastapi import FastAPI
+import uvicorn, os
+
+app = FastAPI(title="Ibra Microservice API", version="1.0.0")
+
+@app.get("/")
+def root():
+    return {"status": "online", "engine": "Ibra X 3.1"}
+
+@app.get("/healthz")
+def health():
+    return {"healthy": True}
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
+EOF
+      cat <<'EOF' > requirements.txt
+fastapi>=0.110.0
+uvicorn>=0.28.0
+EOF
+      cat <<'EOF' > Dockerfile
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+EXPOSE 8000
+CMD ["python", "main.py"]
+EOF
+      echo -e "\033[1;32m✓ Proyek REST API berhasil dibuat di direktori saat ini!\033[0m"
+      ;;
+    2|worker)
+      echo "→ Membuat scaffolding Cloudflare Worker..."
+      cat <<'EOF' > wrangler.toml
+name = "ibra-worker"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+EOF
+      mkdir -p src
+      cat <<'EOF' > src/index.ts
+export default {
+  async fetch(request: Request): Promise<Response> {
+    return new Response(JSON.stringify({ status: "OK", edge: "Ibra Cloudflare Worker" }), {
+      headers: { "Content-Type": "application/json" }
+    });
+  }
+};
+EOF
+      echo -e "\033[1;32m✓ Proyek Cloudflare Worker berhasil dibuat di direktori saat ini!\033[0m"
+      ;;
+    3|bot)
+      echo "→ Membuat scaffolding Webhook Automation Bot..."
+      cat <<'EOF' > bot.py
+import os, sys, urllib.request, json
+
+TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+
+def send_alert(message: str):
+    if not TOKEN or not CHAT_ID:
+        print("Set TELEGRAM_BOT_TOKEN dan TELEGRAM_CHAT_ID di environment!")
+        return
+    url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
+    payload = json.dumps({"chat_id": CHAT_ID, "text": message, "parse_mode": "Markdown"}).encode()
+    req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"})
+    with urllib.request.urlopen(req) as resp:
+        print("Alert terkirim:", resp.status)
+
+if __name__ == "__main__":
+    send_alert("🚀 *Ibra Bot*: Service operasional.")
+EOF
+      echo -e "\033[1;32m✓ Proyek Webhook Bot berhasil dibuat di direktori saat ini!\033[0m"
+      ;;
+    *)
+      echo "Template tidak dikenal: $template"
+      exit 1
+      ;;
+  esac
+}
+
 cmd_update() {
   print_banner
   echo -e "\n\033[1;34m=== MEMPERBARUI IBRA X 3.1 DARI GITHUB ===\033[0m\n"
@@ -114,9 +231,10 @@ interactive_menu() {
   echo "  [8] 🩺 Diagnostik Lengkap (Doctor)"
   echo "  [9] 📢 Kirim Notifikasi Alert (ibra notify)"
   echo "  [10] 🔄 Perbarui Mod dari GitHub"
+  echo "  [11] 📈 Statistik Sistem & Mod (ibra stats)"
   echo "  [0] 🚪 Keluar"
   echo ""
-  read -p "Masukkan nomor pilihan [0-10]: " choice
+  read -p "Masukkan nomor pilihan [0-11]: " choice
   case "$choice" in
     1)
       read -p "Masukkan tugas untuk ibra-x: " task
@@ -140,6 +258,7 @@ interactive_menu() {
       [ -n "$msg" ] && exec /root/ibra-agent-mod/bin/ibra-notify "$msg"
       ;;
     10) cmd_update ;;
+    11) cmd_stats ;;
     0|"") echo "Selesai."; exit 0 ;;
     *) echo "Pilihan tidak valid."; exit 1 ;;
   esac
@@ -186,6 +305,13 @@ case "${1:-}" in
     ;;
   keamanan)
     exec opencode run "/keamanan"
+    ;;
+  stats)
+    cmd_stats
+    ;;
+  init)
+    shift
+    cmd_init "$@"
     ;;
   tinjau)
     exec opencode run "/tinjau"
