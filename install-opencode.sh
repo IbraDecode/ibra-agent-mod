@@ -72,20 +72,22 @@ except Exception as e:
 PY
 fi
 
-# 4. Pasang CLI Utility ibra
-CLI_BIN="$SCRIPT_DIR/bin/ibra"
-if [ -f "$CLI_BIN" ]; then
-  chmod +x "$CLI_BIN"
-  TARGET_BIN="/usr/local/bin/ibra"
-  if [ -w "/usr/local/bin" ]; then
-    ln -sf "$CLI_BIN" "$TARGET_BIN"
-    echo "✓ CLI Utility 'ibra' berhasil dipasang ke $TARGET_BIN"
-  elif [ -d "$HOME/.local/bin" ]; then
-    mkdir -p "$HOME/.local/bin"
-    ln -sf "$CLI_BIN" "$HOME/.local/bin/ibra"
-    echo "✓ CLI Utility 'ibra' berhasil dipasang ke $HOME/.local/bin/ibra"
+# 4. Pasang CLI Utility ibra & ibra-notify
+for bin_name in ibra ibra-notify; do
+  CLI_BIN="$SCRIPT_DIR/bin/$bin_name"
+  if [ -f "$CLI_BIN" ]; then
+    chmod +x "$CLI_BIN"
+    TARGET_BIN="/usr/local/bin/$bin_name"
+    if [ -w "/usr/local/bin" ]; then
+      ln -sf "$CLI_BIN" "$TARGET_BIN"
+      echo "✓ CLI Utility '$bin_name' berhasil dipasang ke $TARGET_BIN"
+    elif [ -d "$HOME/.local/bin" ]; then
+      mkdir -p "$HOME/.local/bin"
+      ln -sf "$CLI_BIN" "$HOME/.local/bin/$bin_name"
+      echo "✓ CLI Utility '$bin_name' berhasil dipasang ke $HOME/.local/bin/$bin_name"
+    fi
   fi
-fi
+done
 
 echo ""
 echo "┌──────────────────────────────────────────────┐"
