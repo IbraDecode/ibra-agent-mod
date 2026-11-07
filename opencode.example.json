@@ -109,5 +109,16 @@
       "model": "9router/is/ag/claude-opus-4-6-thinking",
       "permissions": [{ "action": "edit", "resource": "*", "effect": "deny" }]
     }
+  },
+  "mcp": {
+    "servers": {
+      "ibra-core": {
+        "type": "local",
+        "command": [
+          "python3",
+          "{env:HOME}/ibra-agent-mod/mcp/ibra_mcp.py"
+        ]
+      }
+    }
   }
 }

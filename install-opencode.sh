@@ -39,7 +39,7 @@ fi
 # 3. Daftarkan agent ibra-x jika ada opencode.json
 CONFIG="$OPENCODE_DIR/opencode.json"
 if [ -f "$CONFIG" ]; then
-  python3 - "$CONFIG" <<'PY'
+  python3 - "$CONFIG" "$SCRIPT_DIR/mcp/ibra_mcp.py" <<'PY'
 import sys, json, pathlib
 
 path = sys.argv[1]
@@ -52,13 +52,39 @@ try:
             "mode": "all",
             "model": "9router/is/ag/claude-sonnet-4-6"
         }
-        pathlib.Path(path).write_text(json.dumps(data, indent=2))
         print("✓ Berhasil mendaftarkan agent 'ibra-x' ke opencode.json")
     else:
         print("• Agent 'ibra-x' sudah terdaftar")
+
+    # Daftarkan ibra-core MCP Server
+    mcp_servers = data.setdefault("mcp", {}).setdefault("servers", {})
+    mcp_script = str(pathlib.Path(sys.argv[2]).resolve()) if len(sys.argv) > 2 else ""
+    if mcp_script and pathlib.Path(mcp_script).exists():
+        mcp_servers["ibra-core"] = {
+            "type": "local",
+            "command": ["python3", mcp_script]
+        }
+        print("✓ Berhasil mendaftarkan MCP Server 'ibra-core'")
+
+    pathlib.Path(path).write_text(json.dumps(data, indent=2))
 except Exception as e:
     print(f"⚠ Gagal memodifikasi opencode.json: {e}")
 PY
+fi
+
+# 4. Pasang CLI Utility ibra
+CLI_BIN="$SCRIPT_DIR/bin/ibra"
+if [ -f "$CLI_BIN" ]; then
+  chmod +x "$CLI_BIN"
+  TARGET_BIN="/usr/local/bin/ibra"
+  if [ -w "/usr/local/bin" ]; then
+    ln -sf "$CLI_BIN" "$TARGET_BIN"
+    echo "✓ CLI Utility 'ibra' berhasil dipasang ke $TARGET_BIN"
+  elif [ -d "$HOME/.local/bin" ]; then
+    mkdir -p "$HOME/.local/bin"
+    ln -sf "$CLI_BIN" "$HOME/.local/bin/ibra"
+    echo "✓ CLI Utility 'ibra' berhasil dipasang ke $HOME/.local/bin/ibra"
+  fi
 fi
 
 echo ""

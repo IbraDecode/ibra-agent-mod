@@ -74,17 +74,60 @@ Saat terpasang pada OpenCode (`~/.config/opencode`):
 
 ---
 
+## 🛠️ Ibra Command Center CLI (`ibra`)
+
+Setelah instalasi, perintah global `ibra` tersedia langsung di terminal Anda:
+
+```bash
+# Diagnostik menyeluruh integritas sistem, MCP server & router
+ibra doctor
+
+# Jalankan tugas otonom dengan agen 'ibra-x' (Claude Sonnet 4.6)
+ibra run "Buat skrip backup otomatis database ke S3"
+
+# Eksekusi tugas kilat dengan model Ultra Fast 120B
+ibra fast "Tulis fungsi debounce TypeScript"
+
+# Eksplorasi mendalam & audit logika dengan Opus Thinking
+ibra explore "Analisis celah keamanan pada modul auth"
+
+# Pemeriksaan kesehatan & latensi real-time
+ibra status
+ibra benchmark
+
+# Audit arsitektur & keamanan direktori kerja saat ini
+ibra arsitektur
+ibra keamanan
+
+# Perbarui mod langsung ke versi terbaru dari GitHub
+ibra update
+```
+
+---
+
+## 🔌 Model Context Protocol (MCP) Server: `ibra-core`
+
+Mod ini menyertakan MCP server bawaan berbasis Python murni (`mcp/ibra_mcp.py`) yang terhubung langsung ke OpenCode:
+
+- **`ibra_system_diagnostics`**: Metrik instan RAM, CPU load, kapasitas disk, uptime, dan status engine Docker.
+- **`ibra_port_checker`**: Uji konektivitas port TCP target (network socket probe).
+- **`ibra_http_inspect`**: Inspeksi mendalam status HTTP, header, latensi transfer, dan SSL.
+
+---
+
 ## Struktur Proyek
 
 ```text
 ibra-agent-mod/
-├── install.sh                  # Installer universal (OpenCode + Hermes)
+├── bin/                        # Binary utilitas terminal (ibra CLI)
+├── mcp/                        # Server MCP mandiri (ibra_mcp.py)
+├── commands/                   # 11 Perintah kustom OpenCode (/status, /keamanan, dll.)
+├── skills/                     # Pustaka 179+ keahlian teknis modular
+├── install.sh                  # Installer universal (One-liner curl ready)
 ├── install-opencode.sh         # Installer khusus OpenCode
 ├── SOUL.md                     # Inti profil identitas dan aturan eksekusi Ibra X 3.1
-├── opencode.example.json       # Template konfigurasi OpenCode
+├── opencode.example.json       # Template konfigurasi OpenCode + MCP
 ├── config.example.yaml         # Template konfigurasi Hermes Agent
-├── commands/                   # 8 Perintah kustom OpenCode (/status, /tinjau, dll.)
-├── skills/                     # Pustaka 175+ keahlian teknis modular
 └── README.md                   # Dokumentasi resmi Ibra X 3.1
 ```
 

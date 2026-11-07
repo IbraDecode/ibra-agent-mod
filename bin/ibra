@@ -1,0 +1,167 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# IBRA X 3.1 COMMAND CENTER CLI
+# powered by Ibra AI
+# Author: Ibra Ramdan <ibradecode@gmail.com>
+# ==============================================================================
+set -e
+
+VERSION="3.1.1"
+INSTALL_DIR="/root/ibra-agent-mod"
+
+print_banner() {
+  echo -e "\033[1;36m┌────────────────────────────────────────────────────────┐\033[0m"
+  echo -e "\033[1;36m│\033[0m   \033[1;37m🚀 IBRA X 3.1 — MESIN EKSEKUSI OTONOM CLI (v${VERSION})\033[0m    \033[1;36m│\033[0m"
+  echo -e "\033[1;36m│\033[0m   \033[0;32mOtoritas Penuh · Tanpa Hambatan · Berorientasi Hasil\033[0m \033[1;36m│\033[0m"
+  echo -e "\033[1;36m└────────────────────────────────────────────────────────┘\033[0m"
+}
+
+usage() {
+  print_banner
+  echo ""
+  echo -e "\033[1;33mPenggunaan:\033[0m ibra <perintah> [argumen...]"
+  echo ""
+  echo -e "\033[1;32mPerintah Eksekusi Cerdas:\033[0m"
+  echo "  run <tugas>         Jalankan tugas otonom dengan agen 'ibra-x' (Sonnet 4.6)"
+  echo "  fast <tugas>        Eksekusi tugas kilat dengan model Ultra Fast 120B"
+  echo "  explore <tugas>     Eksplorasi kode & audit logika mendalam (Opus Thinking)"
+  echo "  sonnet <tugas>      Coding dan rekayasa arsitektur dengan Claude Sonnet 4.6"
+  echo ""
+  echo -e "\033[1;32mPerintah Analisis & Audit:\033[0m"
+  echo "  status              Periksa metrik sistem, status Docker & koneksi router API"
+  echo "  benchmark           Uji latensi respons real-time ke router AI"
+  echo "  arsitektur          Analisis struktur modul, diagram Mermaid & refactoring"
+  echo "  keamanan            Audit celah keamanan OWASP, kebocoran secret & permissions"
+  echo "  tinjau              Audit diff Git terkini sebelum commit"
+  echo ""
+  echo -e "\033[1;32mPerintah Manajemen Sistem:\033[0m"
+  echo "  doctor              Diagnostik integritas konfigurasi, MCP server & network"
+  echo "  update              Perbarui mod Ibra X 3.1 ke versi terbaru dari GitHub"
+  echo "  mcp                 Tampilkan status server Model Context Protocol"
+  echo "  version             Tampilkan informasi versi saat ini"
+  echo ""
+}
+
+cmd_doctor() {
+  print_banner
+  echo -e "\n\033[1;34m=== DIAGNOSTIK KESEHATAN SISTEM IBRA X 3.1 ===\033[0m\n"
+  
+  # 1. Cek OpenCode
+  if command -v opencode >/dev/null 2>&1; then
+    echo -e "  [\033[32m✓\033[0m] OpenCode CLI terpasang: $(which opencode)"
+  else
+    echo -e "  [\033[31m✗\033[0m] OpenCode CLI tidak ditemukan!"
+  fi
+
+  # 2. Cek Python
+  if command -v python3 >/dev/null 2>&1; then
+    echo -e "  [\033[32m✓\033[0m] Python Runtime: $(python3 -V)"
+  else
+    echo -e "  [\033[31m✗\033[0m] Python 3 tidak ditemukan!"
+  fi
+
+  # 3. Cek Git & GitHub CLI
+  if command -v git >/dev/null 2>&1; then
+    echo -e "  [\033[32m✓\033[0m] Git Version: $(git --version)"
+  fi
+  if command -v gh >/dev/null 2>&1; then
+    local gh_user
+    gh_user=$(gh api user -q .login 2>/dev/null || echo "offline")
+    echo -e "  [\033[32m✓\033[0m] GitHub CLI login sebagai: \033[1;32m@${gh_user}\033[0m"
+  fi
+
+  # 4. Cek MCP Server
+  echo -e "\n\033[1;34mStatus MCP Server:\033[0m"
+  opencode mcp list 2>&1 | sed 's/^/  /'
+
+  # 5. Cek Koneksi Router API
+  echo -e "\n\033[1;34mKoneksi Router API (https://app.ibra.ai.id/v1):\033[0m"
+  local http_code
+  http_code=$(curl -o /dev/null -s -w "%{http_code}" -H "Authorization: Bearer sk-74719b5a958826c8-wenh6o-7dd6518c" https://app.ibra.ai.id/v1/models || echo "000")
+  if [ "$http_code" = "200" ]; then
+    echo -e "  [\033[32m✓\033[0m] Router API Online (HTTP 200 OK)"
+  else
+    echo -e "  [\033[31m✗\033[0m] Router API mengembalikan kode HTTP: $http_code"
+  fi
+  echo ""
+}
+
+cmd_update() {
+  print_banner
+  echo -e "\n\033[1;34m=== MEMPERBARUI IBRA X 3.1 DARI GITHUB ===\033[0m\n"
+  if [ -d "$INSTALL_DIR/.git" ]; then
+    cd "$INSTALL_DIR"
+    git pull origin main
+    bash install.sh opencode
+    echo -e "\n\033[1;32m✓ Pembaruan Ibra X 3.1 selesai dan siap digunakan!\033[0m"
+  else
+    echo "Direktori repositori tidak ditemukan di $INSTALL_DIR"
+    exit 1
+  fi
+}
+
+# Routing Subcommand
+case "${1:-}" in
+  run)
+    shift
+    if [ $# -eq 0 ]; then
+      echo "Silakan masukkan deskripsi tugas. Contoh: ibra run 'Refactor fungsi auth'"
+      exit 1
+    fi
+    exec opencode run --agent ibra-x "$*"
+    ;;
+  fast)
+    shift
+    if [ $# -eq 0 ]; then
+      echo "Silakan masukkan prompt. Contoh: ibra fast 'Jelaskan quicksort'"
+      exit 1
+    fi
+    exec opencode run -m 9router/ag/gpt-oss-120b-medium "$*"
+    ;;
+  explore)
+    shift
+    if [ $# -eq 0 ]; then
+      echo "Silakan masukkan target eksplorasi. Contoh: ibra explore 'Audit struktur database'"
+      exit 1
+    fi
+    exec opencode run --agent explorer "$*"
+    ;;
+  sonnet)
+    shift
+    exec opencode run -m 9router/is/ag/claude-sonnet-4-6 "$*"
+    ;;
+  status)
+    exec opencode run "/status"
+    ;;
+  benchmark)
+    exec opencode run "/benchmark"
+    ;;
+  arsitektur)
+    exec opencode run "/arsitektur"
+    ;;
+  keamanan)
+    exec opencode run "/keamanan"
+    ;;
+  tinjau)
+    exec opencode run "/tinjau"
+    ;;
+  doctor)
+    cmd_doctor
+    ;;
+  update)
+    cmd_update
+    ;;
+  mcp)
+    exec opencode mcp list
+    ;;
+  version|-v|--version)
+    echo "Ibra X 3.1 Command Center v${VERSION}"
+    ;;
+  help|-h|--help|"")
+    usage
+    ;;
+  *)
+    # Jika memasukkan teks langsung tanpa subcommand, arahkan langsung ke agen ibra-x
+    exec opencode run --agent ibra-x "$*"
+    ;;
+esac
