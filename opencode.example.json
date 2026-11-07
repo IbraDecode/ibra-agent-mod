@@ -1,0 +1,66 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "9router": {
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "https://app.ibra.ai.id/v1",
+        "apiKey": "{env:OPENAI_API_KEY}"
+      },
+      "models": {
+        "is/ibra": {
+          "name": "Ibra X 3.1 Prime (Utama)",
+          "modalities": {
+            "input": ["text"],
+            "output": ["text"]
+          }
+        },
+        "is/ag/claude-sonnet-4-6": {
+          "name": "Ibra X 3.1 Sonnet (Code & Vision)",
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          }
+        },
+        "is/ag/claude-opus-4-6-thinking": {
+          "name": "Ibra X 3.1 Opus Thinking (Explorer)",
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          }
+        },
+        "ag/gpt-oss-120b-medium": {
+          "name": "Ibra X 3.1 Ultra Fast 120B",
+          "modalities": {
+            "input": ["text"],
+            "output": ["text"]
+          }
+        }
+      }
+    }
+  },
+  "model": "9router/is/ibra",
+  "formatter": true,
+  "permissions": [
+    { "action": "shell", "resource": "rm -rf /*", "effect": "deny" },
+    { "action": "shell", "resource": "git push *--force*", "effect": "ask" }
+  ],
+  "agents": {
+    "exsala": {
+      "description": "EXSALA Zero-Friction Autonomous Execution Engine (Sovereign Authority)",
+      "mode": "all",
+      "model": "9router/is/ag/claude-sonnet-4-6"
+    },
+    "explorer": {
+      "description": "Subagent penjelajah kodebase yang cepat",
+      "mode": "subagent",
+      "model": "9router/is/ag/claude-opus-4-6-thinking"
+    },
+    "reviewer": {
+      "description": "Auditor kode untuk keamanan, performa, dan potensi bug (read-only)",
+      "mode": "subagent",
+      "model": "9router/is/ag/claude-opus-4-6-thinking",
+      "permissions": [{ "action": "edit", "resource": "*", "effect": "deny" }]
+    }
+  }
+}

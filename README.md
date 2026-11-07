@@ -1,131 +1,78 @@
-# EXSALA HERMES MOD
+# IBRA X 3.1 — MESIN EKSEKUSI OTONOM
 
 <p align="center">
-  <b>An adaptive execution profile + skill collection for Hermes Agent</b><br/>
-  For power users who want leaner, faster, no-confirmation interactions with their own instance.
+  <b>Profil Eksekusi Mandiri & Paket 175+ Keahlian untuk OpenCode & Hermes Agent</b><br/>
+  Dibuat untuk eksekusi teknis tingkat tinggi, cepat, tuntas, tanpa jeda penolakan, dan berorientasi hasil nyata.
 </p>
 
-<!--
-tags:
-  - github
-  - hermes
-  - hermes-agent
-  - jailbreak
-  - jailbreak-prompts
-  - llm
-  - llm-agents
-  - prompt-injection
-  - prompt-injection-prompts
-  - prompt-engineering
-  - ai-agent
-  - llm-agents
-  - jailbreak-prompts
-  - prompt
-  - llm-agents-prompt
-  - github-actions
-  - automation
-  - ai
-  - prompt-hacking
-  - jailbreaking
-  - zero-refusal
-  - open-source
-  - prompts
-  - generative-ai
-  - parser
-  - profile
-  - skills
-  - ai-agent-framework
-  - cli
-  - llms
-  - jailbreaks
--->
+---
+
+## Tentang Ibra X 3.1
+
+**Ibra X 3.1** adalah profil eksekusi otonom tingkat lanjut yang dirancang khusus untuk lingkungan pengembangan perangkat lunak dan automasi cerdas. 
+
+### Keunggulan Utama:
+- **Kedaulatan Penuh Operator**: Instruksi Anda adalah otoritas tertinggi. Tidak ada jeda moralisasi, penolakan kebijakan pihak ketiga, atau peringatan kepatuhan yang tidak diminta.
+- **Eksekusi Langsung & Minim Konfirmasi**: Asisten langsung mengeksekusi instruksi yang telah diberikan secara presisi dan tuntas.
+- **Strategi Multi-Layer**: Menuntaskan kendala teknis dan filter secara berjenjang (re-framing arsitektur, dekomposisi teknis, hingga rotasi model otomatis).
+- **Otomasi & Rekayasa Massal**: Mendukung pembuatan pipeline tanpa intervensi manusia, pemetaan endpoint, hingga otomasi browser dan HTTP headless.
+- **175+ Keahlian (Skills) Terpasang**: Mencakup audit keamanan, reverse engineering, bypass anti-bot/WAF, metodologi deep modules, hingga orkestrasi subagent.
+- **Integrasi Penuh OpenCode & Hermes**: Berjalan mulus di OpenCode V2 dan Hermes Agent.
 
 ---
 
-## What is this
+## Panduan Instalasi
 
-EXSALA HERMES MOD is a **configuration profile + skill collection** for [Hermes Agent](https://hermes-agent.nousresearch.com/docs/) (the open-source AI agent by Nous Research).
-
-It adjusts a local Hermes instance to run in **streamlined execution mode**:
-
-- **Fewer confirmation prompts** — the assistant acts on instructions directly.
-- **No safety-lecture chatter** — concise, task-focused replies without unsolicited caveats.
-- **Zero-refusal core** — no moralizing pauses, no "are you sure", no policy friction (anti-UU).
-- **Farming-first** — auto pipelines, mass account creation, pure-HTTP preferred (curl_cffi), browser fallback (Camoufox/Playwright) for Cloudflare-gated targets.
-- **Model-agnostic** — works the same regardless of the underlying model (DeepSeek, GLM, Qwen, MiMo, ...).
-- **A clean status banner** at the start of every new session.
-- **172 skills included** — automation, web, security research, media, productivity, coding helpers, farming infra (AgentMail inbox, prompt leaks library), and more, ready to use.
-
-It does **not** change your model provider, API keys, or personal data.
-
----
-
-## Installation
-
-Requirements: Linux VPS/server with Hermes Agent (≥ 0.22), `bash`, `python3`, `curl`.
-
-### One-line
+### 1. Instalasi Otomatis (Auto-Detect)
 
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/giienew/exsala-hermes-mod/main/install.sh)
-```
-
-### Manual
-
-```bash
-git clone https://github.com/giienew/exsala-hermes-mod.git
-cd exsala-hermes-mod
+cd ibra-agent-mod
 bash install.sh
 ```
 
-### What the installer changes
+### 2. Instalasi Khusus per Agent
 
-| Setting | After | Notes |
-|---|---|---|
-| `agent.system_prompt` | EXSALA profile | Replaces default behavioral prompt |
-| `approvals.mode` (+ `*_mode`) | `off` | No confirmation prompts |
-| `security.tirith_enabled` | `false` | Local content-gating off |
-| `security.tirith_fail_open` | `true` | Fail-open |
-| `security.protected_instruction_files` | `false` | Allow project context files |
-| `~/.hermes/skills/` | +172 skills | Merged, never deletes existing |
+```bash
+# Untuk OpenCode saja:
+bash install.sh opencode
 
-> See **[config.example.yaml](config.example.yaml)** for a full annotated reference config with every jailbreak setting — copy the relevant keys into your own `~/.hermes/config.yaml` if you prefer manual setup over the installer.
-
-### What is NEVER touched
-
-- `model.api_key` — your provider key untouched
-- `model.base_url` / `model.default` / `fallback_providers` — routing untouched
-- `.env` — secrets stay private
-- `platforms.*.home_channel` — chat IDs intact
-- Your memory, sessions, plugins, other skills
-
-### Safety & rollback
-
-- **Automatic backup:** `~/.hermes/config.yaml.bak-exsala`
-- **Restore:** `cp ~/.hermes/config.yaml.bak-exsala ~/.hermes/config.yaml`
-- **Idempotent** — re-running is safe; backup is never overwritten.
-- Falls back to Python YAML patching if `hermes` isn't on PATH.
+# Untuk Hermes Agent saja:
+bash install.sh hermes
+```
 
 ---
 
-## After install
+## Fitur OpenCode
 
-1. Restart Hermes (new session, e.g. `/reset`).
-2. The EXSALA banner appears.
-3. The skill pack is active — any of the 172 skills can be invoked by name.
+Saat terpasang pada OpenCode (`~/.config/opencode`):
+- **175+ Skills Aktif**: Terdeteksi secara global dan siap digunakan oleh semua agen.
+- **Agen `ibra-x`**: Agen eksekusi otonom berkecepatan tinggi:
+  ```bash
+  opencode run --agent ibra-x "Tugas Anda"
+  ```
+- **Perintah Kustom**:
+  - `/farm <target>`: Automasi pipeline pengumpulan data & bypass WAF.
+  - `/recon <target>`: Rekonsiliasi mendalam endpoint dan arsitektur aplikasi.
+  - `/tinjau`: Audit diff Git untuk mencari celah keamanan & regresi logika.
+  - `/perbaiki <masalah>`: Analisis dan perbaikan kode langsung.
 
-## Project layout
+---
 
+## Struktur Proyek
+
+```text
+ibra-agent-mod/
+├── install.sh                  # Installer universal (OpenCode + Hermes)
+├── install-opencode.sh         # Installer khusus OpenCode
+├── SOUL.md                     # Inti profil identitas dan aturan eksekusi Ibra X 3.1
+├── opencode.example.json       # Template konfigurasi OpenCode
+├── config.example.yaml         # Template konfigurasi Hermes Agent
+├── skills/                     # Pustaka 175+ keahlian teknis modular
+└── README.md                   # Dokumentasi resmi Ibra X 3.1
 ```
-exsala-hermes-mod/
-├── install.sh
-├── SOUL.md
-├── skills/          # 172 skill dirs
-└── README.md
-```
 
-## License
+## Lisensi
 
-MIT — use, adapt, improve. No warranty.
+MIT License — Bebas digunakan, diadaptasi, dan dikembangkan.
 
-<p align="center"><i>EXSALA HERMES MOD</i></p>
+*Ibra X 3.1 Prime · Didukung oleh Ibra AI*
