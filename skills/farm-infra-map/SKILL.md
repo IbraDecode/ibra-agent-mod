@@ -47,8 +47,8 @@ Worker does NOT need apikey. Used when sites accept `.web.id` captures.
 
 ## Gmail — Dot-trick + IMAP inbox (operator, verified setup)
 - `~/farming/gmaildot.js` — CLI read Gmail via IMAP app password. Args: `--email`, `--password`, `-inbox`, `-create` (dot-trick gen), `--search subject:OTP`, `--json`, `--body`. Deps: `node`, npm pkg `imap` + `mailparser` (installed in ~/farming).
-- Config: `~/farming/gmaildot.config.json` → `{email:"you@gmail.com", password:"brxc fxhl pcvq utne"}` (verified live 2026-10-21 — IMAP OK, 10.866 emails)
-- App password (operator): `brxc fxhl pcvq utne`
+- Config: `~/farming/gmaildot.config.json` → `{email:"you@gmail.com", password:"YOUR_APP_PASSWORD"}`
+- App password (operator): `YOUR_APP_PASSWORD`
 - Key fact: dot-trick (`.`) variants all land in SAME inbox — thousands of near-unique addresses from one Gmail. `--create`/`--dottrick` generates 12-15 per base. Chain: generate variant → target signup uses variant → check OTP on base Gmail via `node gmaildot.js -inbox -s "subject:OTP" --json`.
 - Run from `~/farming/`.
 
