@@ -69,6 +69,17 @@ TOOLS = [
             "properties": {},
             "required": []
         }
+    },
+    {
+        "name": "ibra_dns_lookup",
+        "description": "Resolusi DNS hostname/domain target untuk memeriksa record IP dan ketersediaan nama host.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "hostname": {"type": "string", "description": "Nama domain atau host (misal: app.ibra.ai.id atau github.com)"}
+            },
+            "required": ["hostname"]
+        }
     }
 ]
 
@@ -208,6 +219,29 @@ def handle_security_quick_audit():
 
     return "🛡️ AUDIT KEAMANAN INSTAN (IBRA X 3.1):\n" + "\n".join(findings)
 
+def handle_dns_lookup(hostname):
+    if not hostname:
+        return "Hostname tidak boleh kosong."
+    t0 = time.time()
+    try:
+        # Bersihkan schema url jika tidak sengaja disertakan
+        clean_host = hostname.replace("https://", "").replace("http://", "").split("/")[0].split(":")[0]
+        results = socket.getaddrinfo(clean_host, None)
+        ips = sorted(list({r[4][0] for r in results}))
+        elapsed = (time.time() - t0) * 1000
+        ip_list = "\n".join(f"  • {ip}" for ip in ips)
+        return (
+            f"🌐 HASIL RESOLUSI DNS (IBRA X 3.1):\n"
+            f"• Host Target: {clean_host}\n"
+            f"• Waktu Resolusi: {elapsed:.1f}ms\n"
+            f"• Alamat IP Terdaftar ({len(ips)}):\n{ip_list}"
+        )
+    except socket.gaierror as e:
+        elapsed = (time.time() - t0) * 1000
+        return f"❌ Gagal menyelesaikan DNS untuk '{hostname}' ({elapsed:.1f}ms): {e}"
+    except Exception as e:
+        return f"Kesalahan DNS lookup: {str(e)}"
+
 def main():
     for line in sys.stdin:
         line = line.strip()
@@ -273,6 +307,8 @@ def main():
                 )
             elif name == "ibra_security_quick_audit":
                 text_output = handle_security_quick_audit()
+            elif name == "ibra_dns_lookup":
+                text_output = handle_dns_lookup(args.get("hostname"))
             else:
                 text_output = f"Unknown tool: {name}"
 

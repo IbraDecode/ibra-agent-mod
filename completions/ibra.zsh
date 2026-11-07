@@ -13,6 +13,7 @@ _ibra() {
         'sonnet:Coding dan rekayasa arsitektur dengan Claude Sonnet 4.6'
         'init:Scaffold template proyek baru (api, worker, bot)'
         'status:Periksa metrik sistem, status Docker & router API'
+        'dns:Resolusi DNS cepat untuk hostname/domain target'
         'benchmark:Uji latensi respons real-time ke router AI'
         'arsitektur:Analisis struktur modul, diagram Mermaid & refactoring'
         'keamanan:Audit celah keamanan OWASP, kebocoran secret & permissions'
