@@ -6,7 +6,7 @@
 # ==============================================================================
 set -e
 
-VERSION="3.2.2"
+VERSION="3.2.3"
 INSTALL_DIR="/root/ibra-agent-mod"
 
 print_banner() {
@@ -30,8 +30,10 @@ usage() {
   echo ""
   echo -e "\033[1;32mPerintah Analisis & Audit:\033[0m"
   echo "  status              Periksa metrik sistem, status Docker & koneksi router API"
+  echo "  ping                Uji latensi round-trip (RTT) socket ke router AI"
   echo "  dns <host>          Resolusi DNS cepat untuk hostname/domain target"
   echo "  hash <file>         Hitung checksum SHA-256 dan MD5 integritas berkas"
+  echo "  env                 Inspeksi variabel lingkungan & token (tersamar aman)"
   echo "  benchmark           Uji latensi respons real-time ke router AI"
   echo "  arsitektur          Analisis struktur modul, diagram Mermaid & refactoring"
   echo "  refactor            Audit kode dan rencana refactoring Clean Code & SOLID"
@@ -137,6 +139,61 @@ print(f'• Ukuran  : {os.path.getsize(fpath)} bytes')
 print(f'• SHA-256 : {sha.hexdigest()}')
 print(f'• MD5     : {md5.hexdigest()}')
 " "$target"
+}
+
+cmd_ping() {
+  print_banner
+  echo -e "\n\033[1;34m=== UJI LATENSI TCP SOCKET KE ROUTER AI ===\033[0m\n"
+  python3 -c "
+import socket, time
+host = 'app.ibra.ai.id'
+port = 443
+rtts = []
+print(f'Menguji latensi TCP ke {host}:{port}...')
+for i in range(3):
+    t0 = time.time()
+    try:
+        s = socket.create_connection((host, port), timeout=3.0)
+        rtt = (time.time() - t0) * 1000
+        rtts.append(rtt)
+        s.close()
+        print(f'  [Ping #{i+1}] Latensi: {rtt:.2f} ms')
+    except Exception as e:
+        print(f'  [Ping #{i+1}] Gagal: {e}')
+    time.sleep(0.3)
+
+if rtts:
+    avg_rtt = sum(rtts) / len(rtts)
+    print(f'\nStatistik Latensi: Min={min(rtts):.2f}ms | Avg={avg_rtt:.2f}ms | Max={max(rtts):.2f}ms')
+"
+}
+
+cmd_env() {
+  print_banner
+  echo -e "\n\033[1;34m=== STATUS VARIABEL LINGKUNGAN AI & WEBHOOK ===\033[0m\n"
+  python3 -c "
+import os
+
+def mask(val):
+    if not val:
+        return '❌ Tidak Diatur'
+    if len(val) <= 8:
+        return '✓ Diatur (***)'
+    return f'✓ Diatur ({val[:4]}...{val[-4:]})'
+
+keys = [
+    ('OPENAI_API_KEY', os.getenv('OPENAI_API_KEY')),
+    ('TELEGRAM_BOT_TOKEN', os.getenv('TELEGRAM_BOT_TOKEN')),
+    ('TELEGRAM_CHAT_ID', os.getenv('TELEGRAM_CHAT_ID')),
+    ('DISCORD_WEBHOOK_URL', os.getenv('DISCORD_WEBHOOK_URL')),
+]
+
+for name, val in keys:
+    print(f'  • {name:<22}: {mask(val)}')
+print(f'  • AI Router Endpoint    : https://app.ibra.ai.id/v1')
+print(f'  • Provider ID Utama     : 9router')
+"
+  echo ""
 }
 
 cmd_stats() {
@@ -389,6 +446,12 @@ case "${1:-}" in
     ;;
   status)
     exec opencode run "/status"
+    ;;
+  ping)
+    cmd_ping
+    ;;
+  env)
+    cmd_env
     ;;
   dns)
     shift
