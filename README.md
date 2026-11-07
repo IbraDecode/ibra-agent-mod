@@ -1,7 +1,7 @@
 # IBRA X 3.1 — MESIN EKSEKUSI OTONOM
 
 <p align="center">
-  <b>Profil Eksekusi Mandiri & Paket 185+ Keahlian untuk OpenCode & Hermes Agent</b><br/>
+  <b>Profil Eksekusi Mandiri & Paket 187+ Keahlian untuk OpenCode & Hermes Agent</b><br/>
   Dibuat untuk eksekusi teknis tingkat tinggi, cepat, tuntas, tanpa jeda penolakan, dan berorientasi hasil nyata.
 </p>
 
@@ -16,7 +16,7 @@
 - **Eksekusi Langsung & Minim Konfirmasi**: Asisten langsung mengeksekusi instruksi yang telah diberikan secara presisi dan tuntas.
 - **Strategi Multi-Layer**: Menuntaskan kendala teknis dan filter secara berjenjang (re-framing arsitektur, dekomposisi teknis, hingga rotasi model otomatis).
 - **Otomasi & Rekayasa Massal**: Mendukung pembuatan pipeline tanpa intervensi manusia, pemetaan endpoint, hingga otomasi browser dan HTTP headless.
-- **185+ Keahlian (Skills) Terpasang**: Mencakup audit keamanan, reverse engineering, bypass anti-bot/WAF, metodologi deep modules, hingga orkestrasi subagent.
+- **187+ Keahlian (Skills) Terpasang**: Mencakup audit keamanan, reverse engineering, bypass anti-bot/WAF, metodologi deep modules, hingga orkestrasi subagent.
 - **Integrasi Penuh OpenCode & Hermes**: Berjalan mulus di OpenCode V2 dan Hermes Agent.
 
 ---
@@ -54,7 +54,7 @@ bash install.sh hermes
 ## Fitur OpenCode
 
 Saat terpasang pada OpenCode (`~/.config/opencode`):
-- **185+ Skills Aktif**: Terdeteksi secara global dan siap digunakan oleh seluruh agen.
+- **187+ Skills Aktif**: Terdeteksi secara global dan siap digunakan oleh seluruh agen.
 - **Agen `ibra-x`**: Agen eksekusi otonom berkecepatan tinggi:
   ```bash
   opencode run --agent ibra-x "Tugas Anda"
@@ -121,6 +121,8 @@ Mod ini menyertakan MCP server bawaan berbasis Python murni (`mcp/ibra_mcp.py`) 
 - **`ibra_system_diagnostics`**: Metrik instan RAM, CPU load, kapasitas disk, uptime, dan status engine Docker.
 - **`ibra_port_checker`**: Uji konektivitas port TCP target (network socket probe).
 - **`ibra_http_inspect`**: Inspeksi mendalam status HTTP, header, latensi transfer, dan SSL.
+- **`ibra_process_monitor`**: Memantau top proses pemakan memori/CPU atau filter nama proses.
+- **`ibra_security_quick_audit`**: Audit izin file sensitif host (`/etc/shadow`, `/root/.ssh`), listening ports, dan firewall.
 
 ---
 
@@ -144,7 +146,7 @@ ibra-agent-mod/
 ├── docker/                     # Dockerfile & docker-compose sandbox
 ├── mcp/                        # Server MCP mandiri (ibra_mcp.py)
 ├── commands/                   # 11 Perintah kustom OpenCode (/status, /keamanan, dll.)
-├── skills/                     # Pustaka 185+ keahlian teknis modular
+├── skills/                     # Pustaka 187+ keahlian teknis modular
 ├── install.sh                  # Installer universal (One-liner curl ready)
 ├── install-opencode.sh         # Installer khusus OpenCode
 ├── SOUL.md                     # Inti profil identitas dan aturan eksekusi Ibra X 3.1

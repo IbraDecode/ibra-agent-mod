@@ -48,6 +48,27 @@ TOOLS = [
             },
             "required": ["url"]
         }
+    },
+    {
+        "name": "ibra_process_monitor",
+        "description": "Memantau proses sistem (top proses pemakan CPU/RAM atau filter nama proses tertentu).",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "filter_name": {"type": "string", "description": "Filter proses berdasarkan nama (opsional, misal: node, python, docker)"},
+                "limit": {"type": "integer", "description": "Jumlah baris proses teratas (default: 8)"}
+            },
+            "required": []
+        }
+    },
+    {
+        "name": "ibra_security_quick_audit",
+        "description": "Audit keamanan instan pada level host (izin file sensitif /etc/shadow, port listening publik, status UFW).",
+        "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "required": []
+        }
     }
 ]
 
@@ -136,6 +157,57 @@ def handle_http_inspect(url, method="GET"):
     except Exception as e:
         return f"❌ Gagal menghubungi {url}: {str(e)}"
 
+def handle_process_monitor(filter_name=None, limit=8):
+    try:
+        cmd = ["ps", "-eo", "pid,user,%cpu,%mem,comm", "--sort=-%mem"]
+        res = subprocess.run(cmd, capture_output=True, text=True, timeout=3)
+        if res.returncode != 0:
+            return f"Gagal menjalankan ps: {res.stderr}"
+        lines = res.stdout.strip().split("\n")
+        header = lines[0]
+        rows = lines[1:]
+        if filter_name:
+            rows = [r for r in rows if filter_name.lower() in r.lower()]
+        selected = rows[:int(limit)]
+        out = [header] + selected
+        return "🔍 MONITOR PROSES SISTEM:\n" + "\n".join(out)
+    except Exception as e:
+        return f"Kesalahan monitor proses: {str(e)}"
+
+def handle_security_quick_audit():
+    findings = []
+    # 1. Cek izin file sensitif
+    sensitive_files = ["/etc/shadow", "/etc/passwd", "/root/.ssh"]
+    for path in sensitive_files:
+        if os.path.exists(path):
+            mode = oct(os.stat(path).st_mode)[-3:]
+            findings.append(f"• File {path} memiliki mode izin: {mode}")
+
+    # 2. Cek listening ports
+    ports_info = "N/A"
+    try:
+        res = subprocess.run(["ss", "-tulpn"], capture_output=True, text=True, timeout=2)
+        if res.returncode == 0:
+            lines = [l for l in res.stdout.strip().split("\n") if "LISTEN" in l]
+            ports_info = f"{len(lines)} port listening terdeteksi"
+    except Exception:
+        pass
+    findings.append(f"• Status Port Jaringan: {ports_info}")
+
+    # 3. Cek UFW status
+    ufw_status = "N/A"
+    try:
+        res = subprocess.run(["ufw", "status"], capture_output=True, text=True, timeout=2)
+        if res.returncode == 0:
+            ufw_status = res.stdout.strip().split("\n")[0]
+        else:
+            ufw_status = "Nonaktif atau tidak terpasang"
+    except Exception:
+        ufw_status = "Tidak dapat diakses"
+    findings.append(f"• Firewall UFW: {ufw_status}")
+
+    return "🛡️ AUDIT KEAMANAN INSTAN (IBRA X 3.1):\n" + "\n".join(findings)
+
 def main():
     for line in sys.stdin:
         line = line.strip()
@@ -194,6 +266,13 @@ def main():
                     args.get("url"),
                     args.get("method", "GET")
                 )
+            elif name == "ibra_process_monitor":
+                text_output = handle_process_monitor(
+                    args.get("filter_name"),
+                    args.get("limit", 8)
+                )
+            elif name == "ibra_security_quick_audit":
+                text_output = handle_security_quick_audit()
             else:
                 text_output = f"Unknown tool: {name}"
 
