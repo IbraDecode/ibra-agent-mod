@@ -6,7 +6,7 @@
 # ==============================================================================
 set -e
 
-VERSION="3.1.3"
+VERSION="3.1.4"
 INSTALL_DIR="/root/ibra-agent-mod"
 
 print_banner() {
@@ -101,6 +101,50 @@ cmd_update() {
   fi
 }
 
+interactive_menu() {
+  print_banner
+  echo -e "\n\033[1;33mPILIH TINDAKAN OPERASIONAL:\033[0m"
+  echo "  [1] 🚀 Jalankan Tugas Otonom (ibra-x / Sonnet 4.6)"
+  echo "  [2] ⚡ Tanya Kilat (Ultra Fast 120B)"
+  echo "  [3] 🧠 Eksplorasi Kode & Audit Logika (Opus Thinking)"
+  echo "  [4] 📊 Status Kesehatan Sistem & Router API"
+  echo "  [5] ⏱️  Uji Benchmark Latensi AI Real-Time"
+  echo "  [6] 🏗️  Analisis Arsitektur Codebase"
+  echo "  [7] 🔒 Audit Keamanan OWASP & Secret Leaks"
+  echo "  [8] 🩺 Diagnostik Lengkap (Doctor)"
+  echo "  [9] 📢 Kirim Notifikasi Alert (ibra notify)"
+  echo "  [10] 🔄 Perbarui Mod dari GitHub"
+  echo "  [0] 🚪 Keluar"
+  echo ""
+  read -p "Masukkan nomor pilihan [0-10]: " choice
+  case "$choice" in
+    1)
+      read -p "Masukkan tugas untuk ibra-x: " task
+      [ -n "$task" ] && exec opencode run --agent ibra-x "$task"
+      ;;
+    2)
+      read -p "Masukkan prompt kilat: " task
+      [ -n "$task" ] && exec opencode run -m 9router/ag/gpt-oss-120b-medium "$task"
+      ;;
+    3)
+      read -p "Masukkan target eksplorasi: " task
+      [ -n "$task" ] && exec opencode run --agent explorer "$task"
+      ;;
+    4) exec opencode run "/status" ;;
+    5) exec opencode run "/benchmark" ;;
+    6) exec opencode run "/arsitektur" ;;
+    7) exec opencode run "/keamanan" ;;
+    8) cmd_doctor ;;
+    9)
+      read -p "Pesan notifikasi: " msg
+      [ -n "$msg" ] && exec /root/ibra-agent-mod/bin/ibra-notify "$msg"
+      ;;
+    10) cmd_update ;;
+    0|"") echo "Selesai."; exit 0 ;;
+    *) echo "Pilihan tidak valid."; exit 1 ;;
+  esac
+}
+
 # Routing Subcommand
 case "${1:-}" in
   run)
@@ -162,8 +206,18 @@ case "${1:-}" in
   version|-v|--version)
     echo "Ibra X 3.1 Command Center v${VERSION}"
     ;;
-  help|-h|--help|"")
+  menu)
+    interactive_menu
+    ;;
+  help|-h|--help)
     usage
+    ;;
+  "")
+    if [ -t 0 ]; then
+      interactive_menu
+    else
+      usage
+    fi
     ;;
   *)
     # Jika memasukkan teks langsung tanpa subcommand, arahkan langsung ke agen ibra-x

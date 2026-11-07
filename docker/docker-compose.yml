@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  ibra-agent:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: ibra-agent-sandbox
+    stdin_open: true
+    tty: true
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID:-}
+      - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL:-}
+    volumes:
+      - ..:/root/ibra-agent-mod
+      - .:/workspace
+    working_dir: /workspace
+    restart: unless-stopped
