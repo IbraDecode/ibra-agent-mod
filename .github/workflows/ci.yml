@@ -1,0 +1,54 @@
+name: CI Quality Gate & Verification
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  validate:
+    name: Validasi Integritas Mod Ibra X 3.1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Kode
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validasi Sintaks Skrip Bash
+        run: |
+          echo "Memeriksa sintaks skrip installer..."
+          bash -n install.sh
+          bash -n install-opencode.sh
+          echo "✓ Skrip bash valid."
+
+      - name: Validasi Berkas Konfigurasi JSON & YAML
+        run: |
+          echo "Memeriksa format JSON template..."
+          python -m json.tool opencode.example.json > /dev/null
+          python -c "import json, glob; [json.load(open(f)) for f in glob.glob('**/*.json', recursive=True)]"
+          echo "✓ Format berkas konfigurasi valid."
+
+      - name: Audit Integritas Pustaka Keahlian (Skills)
+        run: |
+          python - <<'EOF'
+          import glob, os, sys
+
+          skill_files = glob.glob("skills/*/SKILL.md")
+          print(f"Total skills terdeteksi: {len(skill_files)}")
+          if len(skill_files) < 170:
+              print(f"ERROR: Jumlah skill ({len(skill_files)}) di bawah ambang batas minimum (170)")
+              sys.exit(1)
+
+          commands = glob.glob("commands/*.md")
+          print(f"Total commands terdeteksi: {len(commands)}")
+          if len(commands) < 8:
+              print(f"ERROR: Jumlah perintah kustom ({len(commands)}) kurang dari 8")
+              sys.exit(1)
+
+          print("✓ Verifikasi integritas skills & commands berhasil.")
+          EOF
