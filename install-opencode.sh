@@ -89,10 +89,18 @@ for bin_name in ibra ibra-notify; do
   fi
 done
 
+# 5. Pasang Auto-Completion Shell
+if [ -f "$SCRIPT_DIR/completions/ibra.bash" ]; then
+  if [ -d "/etc/bash_completion.d" ] && [ -w "/etc/bash_completion.d" ]; then
+    cp "$SCRIPT_DIR/completions/ibra.bash" "/etc/bash_completion.d/ibra"
+    echo "✓ Bash auto-completion terpasang di /etc/bash_completion.d/ibra"
+  fi
+fi
+
 echo ""
 echo "┌──────────────────────────────────────────────┐"
 echo "│  ✅ IBRA X 3.1 MOD BERHASIL TERPASANG        │"
 echo "│  powered by Ibra AI                          │"
 echo "└──────────────────────────────────────────────┘"
-echo " • 175+ Skill Pack aktif di OpenCode"
+echo " • 189+ Skill Pack aktif di OpenCode"
 echo " • Agen 'ibra-x' siap digunakan: opencode run --agent ibra-x"
